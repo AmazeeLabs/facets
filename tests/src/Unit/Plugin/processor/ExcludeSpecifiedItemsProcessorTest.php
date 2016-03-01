@@ -65,10 +65,10 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
     $manager = $this->getMockBuilder('Drupal\facets\Processor\ProcessorPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
-    $manager->expects($this->once())
+    $manager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn($processor_definitions);
-    $manager->expects($this->once())
+    $manager->expects($this->any())
       ->method('createInstance')
       ->willReturn($this->processor);
 
@@ -243,6 +243,35 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
         ],
       ],
     ];
+  }
+
+  /**
+   * Tests configuration.
+   */
+  public function testConfiguration() {
+    $config = $this->processor->defaultConfiguration();
+    $this->assertEquals(['exclude' => '', 'regex' => 0], $config);
+  }
+
+  /**
+   * Tests testDescription().
+   */
+  public function testDescription() {
+    $this->assertEquals('', $this->processor->getDescription());
+  }
+
+  /**
+   * Tests isHidden().
+   */
+  public function testIsHidden() {
+    $this->assertEquals(FALSE, $this->processor->isHidden());
+  }
+
+  /**
+   * Tests isLocked().
+   */
+  public function testIsLocked() {
+    $this->assertEquals(FALSE, $this->processor->isLocked());
   }
 
 }

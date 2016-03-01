@@ -138,6 +138,16 @@ class FacetForm extends EntityForm {
    */
   public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
 
+    $facet_sources = [];
+    foreach ($this->getFacetSourcePluginManager()->getDefinitions() as $facet_source_id => $definition) {
+      $facet_sources[$definition['id']] = !empty($definition['label']) ? $definition['label'] : $facet_source_id;
+    }
+
+    if (count($facet_sources) == 0) {
+      $form['#markup'] = $this->t('You currently have no facet sources defined. You should start by adding a facet source before creating facets.');
+      return;
+    }
+
     $form['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Facet name'),
@@ -169,10 +179,6 @@ class FacetForm extends EntityForm {
       ],
     ];
 
-    $facet_sources = [];
-    foreach ($this->getFacetSourcePluginManager()->getDefinitions() as $facet_source_id => $definition) {
-      $facet_sources[$definition['id']] = !empty($definition['label']) ? $definition['label'] : $facet_source_id;
-    }
     $form['facet_source_id'] = [
       '#type' => 'select',
       '#title' => $this->t('Facet source'),
@@ -317,9 +323,8 @@ class FacetForm extends EntityForm {
     $facet->save();
 
     // Ensure that the caching of the view display is disabled, so the search
-    // correctly returns the facets. This is a temporary fix, until the cache
-    // metadata is correctly stored on the facet block. Only apply this when the
-    // facet source type is actually something this is related to views.
+    // correctly returns the facets. Only apply this when the facet source is
+    // actually a view by exploding on :.
     list($type,) = explode(':', $facet_source_id);
 
     if ($type === 'search_api_views') {
@@ -328,10 +333,9 @@ class FacetForm extends EntityForm {
 
     if (isset($view_id)) {
       $view = Views::getView($view_id);
-
-      $display = &$view->storage->getDisplay($display);
-      $display['display_options']['cache']['type'] = 'none';
-      $view->storage->save();
+      $view->setDisplay($display);
+      $view->display_handler->overrideOption('cache', ['type' => 'none']);
+      $view->save();
     }
 
     if ($is_new) {
@@ -345,6 +349,9 @@ class FacetForm extends EntityForm {
       drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
       $form_state->setRedirect('entity.facets_facet.edit_form', ['facets_facet' => $facet->id()]);
     }
+
+    // Clear Drupal cache for blocks to reflect recent changes.
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
 
     return $facet;
   }

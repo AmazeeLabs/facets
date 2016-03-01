@@ -2,27 +2,26 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facets\Unit\Processor\ProcessorPluginManagerTest.
+ * Contains \Drupal\Tests\facets\Unit\Widget\WidgetPluginManagerTest.
  */
 
-namespace Drupal\Tests\facets\Unit\Processor;
+namespace Drupal\Tests\facets\Unit\UrlProcessor;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\facets\Processor\ProcessorInterface;
-use Drupal\facets\Processor\ProcessorPluginManager;
+use Drupal\facets\Widget\WidgetPluginManager;
 use Drupal\Tests\UnitTestCase;
 use Zend\Stdlib\ArrayObject;
 
 /**
- * Unit test for Processor plugin manager.
+ * Unit test for widget plugin manager.
  *
  * @group facets
  */
-class ProcessorPluginManagerTest extends UnitTestCase {
+class WidgetPluginManagerTest extends UnitTestCase {
 
   /**
    * The cache backend.
@@ -84,7 +83,7 @@ class ProcessorPluginManagerTest extends UnitTestCase {
 
     $namespaces = new ArrayObject();
 
-    $this->sut = new ProcessorPluginManager($namespaces, $this->cache, $this->moduleHandler, $this->translator);
+    $this->sut = new WidgetPluginManager($namespaces, $this->cache, $this->moduleHandler, $this->translator);
     $discovery_property = new \ReflectionProperty($this->sut, 'discovery');
     $discovery_property->setAccessible(TRUE);
     $discovery_property->setValue($this->sut, $this->discovery);
@@ -98,8 +97,8 @@ class ProcessorPluginManagerTest extends UnitTestCase {
    */
   public function testConstruct() {
     $namespaces = new ArrayObject();
-    $sut = new ProcessorPluginManager($namespaces, $this->cache, $this->moduleHandler, $this->translator);
-    $this->assertInstanceOf('\Drupal\facets\Processor\ProcessorPluginManager', $sut);
+    $sut = new WidgetPluginManager($namespaces, $this->cache, $this->moduleHandler, $this->translator);
+    $this->assertInstanceOf('\Drupal\facets\Widget\WidgetPluginManager', $sut);
   }
 
   /**
@@ -115,22 +114,6 @@ class ProcessorPluginManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
     $this->assertSame($definitions, $this->sut->getDefinitions());
-  }
-
-  /**
-   * Tests processing stages.
-   */
-  public function testGetProcessingStages() {
-    $namespaces = new ArrayObject();
-    $sut = new ProcessorPluginManager($namespaces, $this->cache, $this->moduleHandler, $this->translator);
-
-    $stages = [
-      ProcessorInterface::STAGE_PRE_QUERY,
-      ProcessorInterface::STAGE_POST_QUERY,
-      ProcessorInterface::STAGE_BUILD,
-    ];
-
-    $this->assertEquals($stages, array_keys($sut->getProcessingStages()));
   }
 
 }
