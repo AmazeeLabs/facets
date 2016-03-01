@@ -88,7 +88,7 @@ class QueryString extends UrlProcessorPluginBase {
       $result_get_params->set($this->filterKey, $filter_params);
       $request = $this->request;
       if ($facet->getFacetSource()->getPath()) {
-        $request = Request::create('/' . $facet->getFacetSource()->getPath());
+        $request = Request::create($facet->getFacetSource()->getPath());
       }
       $url = Url::createFromRequest($request);
       $url->setOption('query', $result_get_params->all());

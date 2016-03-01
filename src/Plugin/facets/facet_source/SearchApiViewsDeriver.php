@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPageDeriver.
+ * Contains \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsDeriver.
  */
 
 namespace Drupal\facets\Plugin\facets\facet_source;
@@ -13,9 +13,9 @@ use Drupal\facets\FacetSource\FacetSourceDeriverBase;
 /**
  * Derives a facet source plugin definition for every search api view.
  *
- * @see \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPage
+ * @see \Drupal\facets\Plugin\facets\facet_source\SearchApiViews
  */
-class SearchApiViewsPageDeriver extends FacetSourceDeriverBase {
+class SearchApiViewsDeriver extends FacetSourceDeriverBase {
 
   /**
    * {@inheritdoc}
@@ -35,7 +35,7 @@ class SearchApiViewsPageDeriver extends FacetSourceDeriverBase {
         if (strpos($view->get('base_table'), 'search_api_index') !== FALSE) {
           $displays = $view->get('display');
           foreach ($displays as $name => $display_info) {
-            if ($display_info['display_plugin'] == "page") {
+            if (in_array($display_info['display_plugin'], ['page', 'block'])) {
               $machine_name = $view->id() . PluginBase::DERIVATIVE_SEPARATOR . $name;
 
               $plugin_derivatives[$machine_name] = [
