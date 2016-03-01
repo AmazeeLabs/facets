@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Derives a facet source plugin definition for every search api view.
  *
- * @see \Drupal\facets\Plugin\facets\facet_source\SearchApiViews
+ * @see \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPage
  */
 class CoreNodeSearchFacetSourceDeriver extends FacetSourceDeriverBase {
 
