@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPage.
+ * Contains \Drupal\facets\Plugin\facets\facet_source\SearchApiViews.
  */
 
 namespace Drupal\facets\Plugin\facets\facet_source;
@@ -11,6 +11,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\Query\ResultSetInterface;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
 
@@ -19,10 +20,10 @@ use Drupal\views\Views;
  *
  * @FacetsFacetSource(
  *   id = "search_api_views",
- *   deriver = "Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPageDeriver"
+ *   deriver = "Drupal\facets\Plugin\facets\facet_source\SearchApiViewsDeriver"
  * )
  */
-class SearchApiViewsPage extends SearchApiBaseFacetSource implements SearchApiFacetSourceInterface {
+class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetSourceInterface {
 
   use DependencySerializationTrait;
 
@@ -81,9 +82,16 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource implements SearchApiFa
    * {@inheritdoc}
    */
   public function getPath() {
-    $view = Views::getView($this->pluginDefinition['view_id']);
-    $view->setDisplay($this->pluginDefinition['view_display']);
-    return $view->getDisplay()->getPath();
+    $display = View::load($this->pluginDefinition['view_id'])->getDisplay($this->pluginDefinition['view_display']);
+    switch ($display['display_plugin']) {
+      case 'page':
+        $view = Views::getView($this->pluginDefinition['view_id']);
+        $view->setDisplay($this->pluginDefinition['view_display']);
+        return '/' . $view->getDisplay()->getPath();
+      case 'block':
+      default:
+        return \Drupal::service('path.current')->getPath();
+    }
   }
 
   /**
@@ -129,13 +137,22 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource implements SearchApiFa
    * {@inheritdoc}
    */
   public function isRenderedInCurrentRequest() {
-    $request = \Drupal::requestStack()->getMasterRequest();
-    if ($request->attributes->get('_controller') === 'Drupal\views\Routing\ViewPageController::handle') {
-      list(, $search_api_view_id, $search_api_view_display) = explode(':', $this->getPluginId());
+    $display = View::load($this->pluginDefinition['view_id'])->getDisplay($this->pluginDefinition['view_display']);
+    switch ($display['display_plugin']) {
+      case 'page':
+        $request = \Drupal::requestStack()->getMasterRequest();
+        if ($request->attributes->get('_controller') === 'Drupal\views\Routing\ViewPageController::handle') {
+          list(, $search_api_view_id, $search_api_view_display) = explode(':', $this->getPluginId());
 
-      if ($request->attributes->get('view_id') == $search_api_view_id && $request->attributes->get('display_id') == $search_api_view_display) {
+          if ($request->attributes->get('view_id') == $search_api_view_id && $request->attributes->get('display_id') == $search_api_view_display) {
+            return TRUE;
+          }
+        }
+        return FALSE;
+
+      case 'block':
+        // There is no way to know if a block is embedded on a page.
         return TRUE;
-      }
     }
     return FALSE;
   }

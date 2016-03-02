@@ -92,7 +92,7 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertFacetBlocksAppear();
 
     // Show the facet only when the facet source is visible.
-    // @TODO Only for SearchApiViewsPage for the moment.
+    // @TODO Only for SearchApiViews for the moment.
     $this->setOptionShowOnlyWhenFacetSourceVisible($facet_name);
     $this->goToDeleteFacetPage($facet_name);
     $this->assertNoText('item');
