@@ -113,6 +113,20 @@ interface FacetInterface extends ConfigEntityInterface {
   public function isActiveValue($value);
 
   /**
+   * Returns the show_only_one_result option.
+   *
+   * @return bool
+   */
+  public function getShowOnlyOneResult();
+
+  /**
+   * Sets the show_only_one_result option.
+   *
+   * @param bool $show_only_one_result
+   */
+  public function setShowOnlyOneResult($show_only_one_result);
+
+  /**
    * Returns the result for the facet.
    *
    * @return \Drupal\facets\Result\ResultInterface[] $results
