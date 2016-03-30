@@ -47,7 +47,7 @@ class LinksWidget implements WidgetInterface {
         $items[] = $text;
       }
       else {
-        $items[] = $this->buildListItems($result, $show_numbers);
+        $items[] = $this->buildListItems($result, $show_numbers, $active = $result->isActive());
       }
     }
 
@@ -71,12 +71,20 @@ class LinksWidget implements WidgetInterface {
    *   A result item.
    * @param bool $show_numbers
    *   A boolean that's true when the numbers should be shown.
+   * @param bool $active
+   *   A boolean that indicates if the items is active.
+   *   Defaults to FALSE.
    *
    * @return array|Link|string
    *   A renderable array of the result or a link when the result has no
    *   children.
    */
-  protected function buildListItems(ResultInterface $result, $show_numbers) {
+  protected function buildListItems(ResultInterface $result, $show_numbers, $active = FALSE) {
+    $classes = [];
+    if ($active) {
+      $classes[] = 'facet_item--active';
+    }
+
     if ($children = $result->getChildren()) {
       $link = $this->prepareLink($result, $show_numbers);
 
@@ -85,17 +93,25 @@ class LinksWidget implements WidgetInterface {
         $children_markup[] = $this->buildChildren($child, $show_numbers);
       }
 
+      $classes[] ='expanded';
+
       $items = [
         '#markup' => $link->toString(),
         '#wrapper_attributes' => [
-          'class' => ['expanded'],
+          'class' => $classes,
         ],
         'children' => [$children_markup],
       ];
 
     }
     else {
-      $items = $this->prepareLink($result, $show_numbers);
+      $link = $this->prepareLink($result, $show_numbers);
+      $items = [
+        '#markup' => $link->toString(),
+        '#wrapper_attributes' => [
+          'class' => $classes,
+        ],
+      ];
     }
 
     return $items;
