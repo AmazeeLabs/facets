@@ -39,10 +39,6 @@ class LinksWidget implements WidgetInterface {
       if ($show_numbers) {
         $text .= ' (' . $result->getCount() . ')';
       }
-      if ($result->isActive()) {
-        $text = '(-) ' . $text;
-      }
-
       if (is_null($result->getUrl())) {
         $items[] = $text;
       }
@@ -134,10 +130,6 @@ class LinksWidget implements WidgetInterface {
     if ($show_numbers && $result->getCount()) {
       $text .= ' (' . $result->getCount() . ')';
     }
-    if ($result->isActive()) {
-      $text = '(-) ' . $text;
-    }
-
     if (is_null($result->getUrl())) {
       $link = $text;
     }
@@ -164,10 +156,6 @@ class LinksWidget implements WidgetInterface {
     if ($show_numbers && $child->getCount()) {
       $text .= ' (' . $child->getCount() . ')';
     }
-    if ($child->isActive()) {
-      $text = '(-) ' . $text;
-    }
-
     if (!is_null($child->getUrl())) {
       $link = new Link($text, $child->getUrl());
       $text = $link->toString();
