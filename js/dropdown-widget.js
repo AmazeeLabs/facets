@@ -24,6 +24,10 @@
       var $links = $ul.find('.facet-item a');
       var $dropdown = $('<select class="facets-dropdown" />').data($ul.data());
 
+      if ($ul.hasClass('multiple-select')) {
+        $dropdown.attr('multiple', 'multiple');
+      }
+
       // Add empty text option first.
       var default_option_label = $ul.data('facet-default-option-label');
       var $default_option = $('<option />')

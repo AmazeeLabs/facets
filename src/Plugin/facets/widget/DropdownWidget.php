@@ -32,6 +32,9 @@ class DropdownWidget extends WidgetPluginBase {
   public function build(FacetInterface $facet) {
     $build = parent::build($facet);
     $build['#attributes']['class'][] = 'js-facets-dropdown-links';
+    if (!$facet->getShowOnlyOneResult()) {
+      $build['#attributes']['class'][] = 'multiple-select';
+    }
     $build['#attributes']['data-facet-default-option-label'] = $this->getConfiguration()['default_option_label'];
     $build['#attached']['library'][] = 'facets/drupal.facets.dropdown-widget';
     return $build;
@@ -42,11 +45,6 @@ class DropdownWidget extends WidgetPluginBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     $config = $this->getConfiguration();
-
-    $message = $this->t('This widget requires "Make sure only one result can be shown." to be enabled to behave as a standard dropdown.');
-    $form['warning'] = [
-      '#markup' => '<div class="messages messages--warning">' . $message . '</div>',
-    ];
 
     $form += parent::buildConfigurationForm($form, $form_state, $facet);
 
