@@ -1,6 +1,6 @@
 /**
  * @file
- * Transforms links into checkboxes.
+ * Transforms links into checkboxes / radios.
  */
 
 (function ($) {
@@ -10,55 +10,66 @@
   Drupal.facets = Drupal.facets || {};
   Drupal.behaviors.facetsCheckboxWidget = {
     attach: function (context, settings) {
-      Drupal.facets.makeCheckboxes();
+      Drupal.facets.makeInputs();
     }
   };
 
   /**
-   * Turns all facet links into checkboxes.
+   * Turns all facet links into checkboxes / radios.
    */
-  Drupal.facets.makeCheckboxes = function () {
-    // Find all checkbox facet links and give them a checkbox.
+  Drupal.facets.makeInputs = function () {
+    // Find all facet links and give them an input.
     var $links = $('.js-facets-checkbox-links .facet-item a');
-    $links.once('facets-checkbox-transform').each(Drupal.facets.makeCheckbox);
+    $links.once('facets-input-transform').each(Drupal.facets.makeInput);
   };
 
   /**
-   * Replace a link with a checked checkbox.
+   * Replace a link with a checked checkbox/radio.
    */
-  Drupal.facets.makeCheckbox = function () {
+  Drupal.facets.makeInput = function () {
     var $link = $(this);
+    var $ul = $link.parents('.js-facets-checkbox-links');
     var active = $link.hasClass('is-active');
     var description = $link.html();
     var href = $link.attr('href');
     var id = $link.data('drupal-facet-item-id');
+    var name = $ul.data('drupal-facet-id');
 
-    var checkbox = $('<input type="checkbox" class="facets-checkbox">')
+    var input = $('<input class="facets-input">')
       .attr('id', id)
+      .attr('name', name)
       .data($link.data())
       .data('facetsredir', href);
+
+    if ($ul.data('drupal-facet-show-only-one-result')) {
+      input.attr('type', 'radio').addClass('facets-radio');
+    }
+    else {
+      input.attr('type', 'checkbox').addClass('facets-checkbox');
+    }
+
     var label = $('<label for="' + id + '">' + description + '</label>');
 
-    checkbox.on('change.facets', function (e) {
-      Drupal.facets.disableFacet($link.parents('.js-facets-checkbox-links'));
+    input.on('change.facets', function (e) {
+      Drupal.facets.disableFacet($ul);
       window.location.href = $(this).data('facetsredir');
     });
 
     if (active) {
-      checkbox.attr('checked', true);
+      input.attr('checked', true);
       label.find('.js-facet-deactivate').remove();
     }
 
-    $link.before(checkbox).before(label).remove();
+    $link.before(input).before(label).remove();
 
   };
 
   /**
-   * Disable all facet checkboxes in the facet and apply a 'disabled' class.
+   * Disable all facet checkboxes / radios in the facet and apply a 'disabled' class.
    */
   Drupal.facets.disableFacet = function ($facet) {
     $facet.addClass('facets-disabled');
-    $('input.facets-checkbox').click(Drupal.facets.preventDefault);
+    $('input.facets-input').click(Drupal.facets.preventDefault);
     $('input.facetapi-checkbox', $facet).attr('disabled', true);
   };
 

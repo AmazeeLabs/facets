@@ -21,6 +21,7 @@ class CheckboxWidget extends LinksWidget {
   public function build(FacetInterface $facet) {
     $build = parent::build($facet);
     $build['#attributes']['class'][] = 'js-facets-checkbox-links';
+    $build['#attributes']['data-drupal-facet-show-only-one-result'] = (int) $facet->getShowOnlyOneResult();
     $build['#attached']['library'][] = 'facets/drupal.facets.checkbox-widget';
     return $build;
   }
