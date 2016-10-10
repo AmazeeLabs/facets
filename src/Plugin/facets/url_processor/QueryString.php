@@ -19,11 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 class QueryString extends UrlProcessorPluginBase {
 
   /**
-   * A string that separates the filters in the query string.
-   */
-  const SEPARATOR = ':';
-
-  /**
    * A string of how to represent the facet in the url.
    *
    * @var string
@@ -80,7 +75,7 @@ class QueryString extends UrlProcessorPluginBase {
         $this->buildUrls($facet, $children);
       }
 
-      $filter_string = $this->urlAlias . self::SEPARATOR . $result->getRawValue();
+      $filter_string = $this->urlAlias . $this->separator . $result->getRawValue();
       $result_get_params = clone $get_params;
 
       $filter_params = $result_get_params->get($this->filterKey, [], TRUE);
@@ -100,7 +95,7 @@ class QueryString extends UrlProcessorPluginBase {
         if ($facet->getShowOnlyOneResult()) {
           foreach ($results as $result2) {
             if ($result2->isActive()) {
-              $active_filter_string = $this->urlAlias . self::SEPARATOR . $result2->getRawValue();
+              $active_filter_string = $this->urlAlias . $this->separator . $result2->getRawValue();
               foreach ($filter_params as $key2 => $filter_param2) {
                 if ($filter_param2 == $active_filter_string) {
                   unset($filter_params[$key2]);
@@ -154,13 +149,13 @@ class QueryString extends UrlProcessorPluginBase {
 
     // Explode the active params on the separator.
     foreach ($active_params as $param) {
-      $explosion = explode(self::SEPARATOR, $param);
+      $explosion = explode($this->separator, $param);
       $key = array_shift($explosion);
       $value = '';
       while (count($explosion) > 0) {
         $value .= array_shift($explosion);
         if (count($explosion) > 0) {
-          $value .= self::SEPARATOR;
+          $value .= $this->separator;
         }
       }
       if (!isset($this->activeFilters[$key])) {

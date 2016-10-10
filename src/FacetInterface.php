@@ -110,6 +110,14 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getActiveItems();
 
   /**
+   * Sets the active items.
+   *
+   * @param array $values
+   *   An list of values.
+   */
+  public function setActiveItems($values);
+
+  /**
    * Checks if a value is active.
    *
    * @param string $value

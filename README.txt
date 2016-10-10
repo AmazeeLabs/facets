@@ -6,8 +6,8 @@ CONTENTS OF THIS FILE
  * Configuration
  * FAQ
 
- INTRODUCTION
- ------------
+INTRODUCTION
+------------
 Todo
 
 REQUIREMENTS
@@ -19,8 +19,18 @@ tested.
 INSTALLATION
 ------------
  * Install as you would normally install a contributed drupal module. See:
-  https://drupal.org/documentation/install/modules-themes/modules-7
-  for further information.
+   https://drupal.org/documentation/install/modules-themes/modules-7
+   for further information.
+ * If you want to use facet sliders, you need to add the Slider pips jquery
+   plugin:
+    - create the /libraries/jquery-ui-slider-pips folder.
+    - download the following files from
+    https://github.com/simeydotme/jQuery-ui-Slider-Pips/tree/v1.11.3/dist
+       - jquery-ui-slider-pips.min.js
+       - jquery-ui-slider-pips.min.css
+
+   You can find more information about this jquery plugin on
+   http://simeydotme.github.io/jQuery-ui-Slider-Pips/
 
 CONFIGURATION
 -------------
@@ -37,6 +47,5 @@ facets for that view.
 
 FAQ
 ---
-
 Q: Why do the facets disappear after a refresh.
 A: We don't support cached views, change the view to disable caching.

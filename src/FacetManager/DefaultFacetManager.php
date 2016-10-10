@@ -284,6 +284,7 @@ class DefaultFacetManager {
     // @see \Drupal\facets\Processor\BuildProcessorInterface.
     // @see \Drupal\facets\Processor\SortProcessorInterface.
     $results = $facet->getResults();
+    $processors = $facet->getProcessorsByStage(ProcessorInterface::STAGE_BUILD);
 
     foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_BUILD) as $processor) {
       if (!$processor instanceof BuildProcessorInterface) {

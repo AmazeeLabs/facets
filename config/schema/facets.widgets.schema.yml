@@ -33,6 +33,34 @@ facet.widget.config.links:
       type: integer
       label: 'Soft limit'
 
+# Config schema for slider, you can find the implementation in
+# Drupal\facets\Plugin\facets\widget\SliderWidget.
+facet.widget.config.slider:
+  type: facet.widget.default_config
+  label: 'List of range widget configuration'
+  mapping:
+    prefix:
+      type: string
+      label: 'Prefix'
+    suffix:
+      type: string
+      label: 'Suffix'
+    min_type:
+      type: string
+      label: 'Minimum type'
+    min_value:
+      type: float
+      label: 'Minimum value'
+    max_type:
+      type: string
+      label: 'Maximum type'
+    max_value:
+      type: float
+      label: 'Maximum value'
+    step:
+      type: float
+      label: 'Step'
+
 # Config schema for checkbox, you can find the implementation in
 # Drupal\facets\Plugin\facets\widget\CheckboxWidget. Options for this widget are
 # "soft limit" and "show counts".

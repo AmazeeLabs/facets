@@ -38,6 +38,7 @@ drupal.facets.dropdown-widget:
     - core/jquery
     - core/drupal
     - core/jquery.once
+
 soft-limit:
   version: VERSION
   js:
@@ -46,3 +47,31 @@ soft-limit:
     - core/jquery
     - core/jquery.once
     - core/drupalSettings
+
+jquery.ui.slider.pips:
+  remote: http://simeydotme.github.io/jQuery-ui-Slider-Pips/
+  version: v1.11.3
+  license:
+      name: MIT
+      url: https://github.com/simeydotme/jQuery-ui-Slider-Pips/blob/v1.11.3/README.md
+      gpl-compatible: true
+  js:
+    /libraries/jquery-ui-slider-pips/jquery-ui-slider-pips.min.js: { minified: true }
+  css:
+    component:
+      /libraries/jquery-ui-slider-pips/jquery-ui-slider-pips.min.css: { minified: true }
+  dependencies:
+    - core/jquery.ui.slider
+
+slider:
+  version: VERSION
+  js:
+    js/slider.js: {}
+  css:
+    component:
+      css/slider.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - facets/jquery.ui.slider.pips

@@ -130,11 +130,14 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     switch ($data_type_plugin_id) {
       case 'boolean':
       case 'date':
-      case 'decimal':
-      case 'integer':
       case 'string':
       case 'text':
         $query_types['string'] = 'search_api_string';
+        break;
+      case 'decimal':
+      case 'integer':
+        $query_types['string'] = 'search_api_string';
+        $query_types['range'] = 'search_api_range';
         break;
     }
 

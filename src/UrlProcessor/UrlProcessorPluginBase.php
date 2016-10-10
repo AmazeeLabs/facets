@@ -22,6 +22,14 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
   protected $filterKey = 'f';
 
   /**
+   * The url sepaarator variable.
+   *
+   * @var string
+   *   The sepatator to use between field and value.
+   */
+  protected $separator = ':';
+
+  /**
    * The current request object.
    *
    * @var Request
@@ -34,6 +42,13 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
    */
   public function getFilterKey() {
     return $this->filterKey;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSeparator() {
+    return $this->separator;
   }
 
   /**
